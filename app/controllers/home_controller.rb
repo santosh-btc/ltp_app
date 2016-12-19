@@ -1,5 +1,10 @@
 class HomeController < ApplicationController
 
+
+  def index
+    
+  end
+
   def article_html
     agent = Mechanize.new
     page = agent.get("https://letstalkpayments.com/fundchain-unveils-first-insight-of-blockchain-proof-of-concept-for-the-investments-funds-industry-the-smart-ta/")
@@ -31,20 +36,15 @@ class HomeController < ApplicationController
       article_list = page.search('.article-list .item-content')
 
       article_list.each do |article|
+        url = article.at('h3 a')['href']
         title = article.at('.entry-title').text
         posted_at = article.at('h4').text.gsub!(/&nbsp.*/, '')
         posted_by = article.at('h4').text.gsub!(/.*&nbspBy\s\:/, '')
 
-        Article.find_or_create_by(title: title, posted_at: posted_at, posted_by: posted_by)
-        # insights_articles << {title: title, posted_at: posted_at, posted_by:posted_by}
+        Article.find_or_create_by(title: title, posted_at: posted_at, posted_by: posted_by,  url: url)
       end
       first_page = false
     end
-
-    # render json: {
-    #     articles: insights_articles
-    #   }
-    # insights_articles
   end
 
   def news_scrap
