@@ -4,8 +4,10 @@ one:
   title: MyString
   posted_at: MyString
   posted_by: MyString
+  url: MyString
 
 two:
   title: MyString
   posted_at: MyString
   posted_by: MyString
+  url: MyString
