@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  resources :articles
+  resources :news_articles
+  resources :insights
+  post '/paginate_insights' => 'insights#paginate_insights'
+  post '/paginate_news_articles' => 'news_articles#paginate_news_articles'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
   get 'home/article_html' => 'home#article_html'

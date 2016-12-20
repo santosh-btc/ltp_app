@@ -30,28 +30,37 @@ class HomeController < ApplicationController
     while next_page.present?
       puts "#{i+=1}"
       unless first_page
+        # break if i == 2
         break if page.link_with(text: 'Next Page ').blank?
         page = page.link_with(text: 'Next Page ').click
       end
       article_list = page.search('.article-list .item-content')
 
       article_list.each do |article|
-        url = article.at('h3 a')['href']
+        article_url  = article.at('h3 a')['href']
+        article_page = agent.get(article_url)
+        article_text = article_page.search('div .article-content p').to_html
+        # article_page.search('div .article-content p').text.gsub(/\n\r\n\t\t\t.*\n.*/, '')
+        
+        article_text = article_text.slice(0..article_text.index(/<a style="display:block;" href="http:\/\/medici.letstalkpayments.com\/">/)).gsub(/\n\r\n\t\t.*/, '') rescue ''
+        next if article_text.blank?
         title = article.at('.entry-title').text
         posted_at = article.at('h4').text.gsub!(/&nbsp.*/, '')
         posted_by = article.at('h4').text.gsub!(/.*&nbspBy\s\:/, '')
 
-        Article.find_or_create_by(title: title, posted_at: posted_at, posted_by: posted_by,  url: url)
+        Insight.find_or_create_by(title: title, posted_at: posted_at, posted_by: posted_by,  article_text: article_text)
       end
       first_page = false
     end
   end
 
+
   def news_scrap
-    insights_articles = []
+    # @article = Article.new
+    # insights_articles = []
     i = 0
     agent = Mechanize.new
-    url = 'https://letstalkpayments.com/tag/insights/'
+    url = 'https://letstalkpayments.com/tag/news/'
     page = agent.get(url)
 
     next_page = page.link_with(text: 'Next Page ').href
@@ -60,24 +69,27 @@ class HomeController < ApplicationController
     while next_page.present?
       puts "#{i+=1}"
       unless first_page
+        # break if i == 8
         break if page.link_with(text: 'Next Page ').blank?
         page = page.link_with(text: 'Next Page ').click
       end
       article_list = page.search('.article-list .item-content')
 
       article_list.each do |article|
-        title = article.at('.entry-title').text
+        article_url  = article.at('h3 a')['href']
+        article_page = agent.get(article_url)
+        article_text = article_page.search('div .article-content p').to_html
+        # article_page.search('div .article-content p').text.gsub(/\n\r\n\t\t\t.*\n.*/, '')
+        
+        article_text = article_text.slice(0..article_text.index(/<a style="display:block;" href="http:\/\/medici.letstalkpayments.com\/">/)).gsub(/\n\r\n\t\t.*/, '') rescue ''
+        next if article_text.blank?
+        title = article.at('.entry-title').text 
         posted_at = article.at('h4').text.gsub!(/&nbsp.*/, '')
         posted_by = article.at('h4').text.gsub!(/.*&nbspBy\s\:/, '')
 
-        insights_articles << {title: title, posted_at: posted_at, posted_by:posted_by}
+        NewsArticle.find_or_create_by(title: title, posted_at: posted_at, posted_by: posted_by,  article_text: article_text)
       end
       first_page = false
     end
-
-    render json: {
-        articles: insights_articles
-      }
-    insights_articles
   end
 end

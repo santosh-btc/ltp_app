@@ -1,0 +1,33 @@
+<%= form_for(@insight) do |f| %>
+  <% if @insight.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@insight.errors.count, "error") %> prohibited this insight from being saved:</h2>
+
+      <ul>
+      <% @insight.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %><br>
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :posted_at %><br>
+    <%= f.text_field :posted_at %>
+  </div>
+  <div class="field">
+    <%= f.label :posted_by %><br>
+    <%= f.text_field :posted_by %>
+  </div>
+  <div class="field">
+    <%= f.label :article_text %><br>
+    <%= f.text_area :article_text %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

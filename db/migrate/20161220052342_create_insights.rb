@@ -1,10 +1,10 @@
-class CreateArticles < ActiveRecord::Migration
+class CreateInsights < ActiveRecord::Migration
   def change
-    create_table :articles do |t|
+    create_table :insights do |t|
       t.string :title
       t.string :posted_at
       t.string :posted_by
-      t.string :url
+      t.text :article_text
 
       t.timestamps null: false
     end

@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @insight.title %>
+</p>
+
+<p>
+  <strong>Posted at:</strong>
+  <%= @insight.posted_at %>
+</p>
+
+<p>
+  <strong>Posted by:</strong>
+  <%= @insight.posted_by %>
+</p>
+
+<p>
+  <strong>Article text:</strong>
+  <%= @insight.article_text %>
+</p>
+
+<%= link_to 'Edit', edit_insight_path(@insight) %> |
+<%= link_to 'Back', insights_path %>
